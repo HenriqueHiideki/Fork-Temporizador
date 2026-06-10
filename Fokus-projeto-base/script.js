@@ -8,9 +8,9 @@ const musicaFoco = document.querySelector("#alternar-musica");
 const displayTempo = document.querySelector("#timer");
 const banner = document.querySelector(".app__image");
 const titulo = document.querySelector(".app__title");
-let tempoDecorridoEmSegundos = 5;
 let intervaloId = null;
-const startPauseButton = document.querySelector("#start-pause");
+const startPauseButton = document.querySelector("#start-pause span");
+const startPauseButtonIcon = document.querySelector(".app__card-primary-butto-icon");
 
 //Variaveis Instancias de Audio;
 const musica = new Audio("./sons/luna-rise-part-one.mp3");
@@ -21,22 +21,31 @@ const musicaTempoFinalizado = new Audio("./sons/beep.mp3");
 //Variáveis com o tempo de duracao de cada modo.
 const duracaoFoco = 1500;
 const duracaoDescanso = 300;
-const duracaoDescandoLongo = 900;
+const duracaoDescansoLongo = 900;
 
+let tempoDecorridoEmSegundos = duracaoFoco;
 //Funcoes que alteram a cor do contraste nos modos: Foco, Descando Curto e Descanso Longo.
 focoButton.addEventListener("click", () => {
+  tempoDecorridoEmSegundos = duracaoFoco;
   alterarContexto("foco");
   focoButton.classList.add("active");
+  mostrarTempo();
 });
 
 curtoButton.addEventListener("click", () => {
+  tempoDecorridoEmSegundos = duracaoDescanso;
   alterarContexto("descanso-curto");
+  zerar();
   curtoButton.classList.add("active");
+  mostrarTempo();
 });
 
 descansoLongo.addEventListener("click", () => {
+  tempoDecorridoEmSegundos = duracaoDescansoLongo;
   alterarContexto("descanso-longo");
+  zerar();
   descansoLongo.classList.add("active");
+  mostrarTempo();
 });
 
 function alterarContexto(contexto) {
@@ -82,10 +91,11 @@ const contagemRegressiva = () => {
     return;
   }
   tempoDecorridoEmSegundos -= 1;
+  mostrarTempo();
   console.log("Temporizador: " + tempoDecorridoEmSegundos);
 };
 
-startPauseButton.addEventListener("click", iniciarOuPausar);
+startButton.addEventListener("click", iniciarOuPausar);
 
 function iniciarOuPausar() {
   if (intervaloId) {
@@ -95,6 +105,8 @@ function iniciarOuPausar() {
   }
   musicaPlay.play();
   intervaloId = setInterval(contagemRegressiva, 1000);
+  startPauseButton.textContent = "Pausar";
+  startPauseButtonIcon.setAttribute("src", "./imagens/pause.png");
 }
 
 function finalizar() {
@@ -104,5 +116,18 @@ function finalizar() {
 
 function zerar() {
   clearInterval(intervaloId);
-  intervalId = null;
+  intervaloId = null;
+  startPauseButton.textContent = "Comecar";
+  startPauseButtonIcon.setAttribute("src", "./imagens/play_arrow.png");
 }
+
+function mostrarTempo() {
+  const tempo = new Date(tempoDecorridoEmSegundos * 1000);
+  const tempoFormatado = tempo.toLocaleTimeString("pt-Br", {
+    minute: "2-digit",
+    second: "2-digit",
+  });
+  displayTempo.innerHTML = `${tempoFormatado}`;
+}
+
+mostrarTempo();
