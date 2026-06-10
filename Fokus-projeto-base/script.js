@@ -3,8 +3,9 @@ const startButton = document.querySelector(".app__card-primary-button");
 const focoButton = document.querySelector(".app__card-button--foco");
 const curtoButton = document.querySelector(".app__card-button--curto");
 const descansoLongo = document.querySelector(".app__card-button--longo");
-
-
+const botes = document.querySelectorAll(".app__card-button");
+const musicaFoco = document.querySelector('#alternar-musica');
+const musica = new Audio('./sons/luna-rise-part-one.mp3');
 const displayTempo = document.querySelector("#timer");
 const banner = document.querySelector(".app__image");
 const titulo = document.querySelector(".app__title");
@@ -17,17 +18,18 @@ const duracaoDescandoLongo = 900;
 //Funcoes que alteram a cor do contraste nos modos: Foco, Descando Curto e Descanso Longo.
 focoButton.addEventListener("click", () => {
   alterarContexto("foco");
+  focoButton.classList.add('active')
 });
 
 curtoButton.addEventListener("click", () => {
   alterarContexto("descanso-curto");
+  curtoButton.classList.add('active');
 });
 
 descansoLongo.addEventListener("click", () => {
   alterarContexto("descanso-longo");
+  descansoLongo.classList.add('active');
 });
-
-
 
 function alterarContexto(contexto) {
   html.setAttribute("data-contexto", contexto)
@@ -49,3 +51,14 @@ function alterarContexto(contexto) {
         break;
   }
 }
+
+//Configuracao da música de fundo.
+musicaFoco.addEventListener('change', () => {
+    if(musica.paused) {
+        musica.play();
+    }
+    else{
+        muica.paused();
+    }
+})
+musica.loop = true; // Faz com que a musica fique em loop o tempo inteiro. 
